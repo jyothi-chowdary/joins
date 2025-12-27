@@ -1,0 +1,162 @@
+ Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.44 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++-------------------------+
+| Database                |
++-------------------------+
+| information_schema      |
+| institute               |
+| mysql                   |
+| performance_schema      |
+| sadabadschoolmanagement |
+| sys                     |
++-------------------------+
+6 rows in set (0.00 sec)
+
+mysql> use institute;
+Database changed
+mysql> CREATE TABLE student (student_id INT PRIMARY KEY, name VARCHAR(50), age INT, class VARCHAR(10));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE marks (mark_id INT PRIMARY KEY, student_id INT, subject VARCHAR(50), score INT, FOREIGN KEY (student_id) REFERENCES student(student_id));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO student (student_id, name, age, class) VALUES (1,'Alice',15,'10A'),(2,'Bob',16,'10B'),(3,'Charlie',15,'10A'),(4,'David',16,'10B'),(5,'Eva',15,'10A'),(6,'Frank',16,'10B'),(7,'Grace',15,'10A'),(8,'Hannah',16,'10B'),(9,'Ian',15,'10A'),(10,'Jack',16,'10B');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO marks (mark_id, student_id, subject, score) VALUES (1,1,'Math',85),(2,2,'Math',78),(3,3,'Math',92),(4,4,'Math',88),(5,5,'Math',74),(6,6,'Math',90),(7,7,'Math',80),(8,8,'Math',86),(9,9,'Math',89),(10,10,'Math',91);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> desc student;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| student_id | int         | NO   | PRI | NULL    |       |
+| name       | varchar(50) | YES  |     | NULL    |       |
+| age        | int         | YES  |     | NULL    |       |
+| class      | varchar(10) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM student;
++------------+---------+------+-------+
+| student_id | name    | age  | class |
++------------+---------+------+-------+
+|          1 | Alice   |   15 | 10A   |
+|          2 | Bob     |   16 | 10B   |
+|          3 | Charlie |   15 | 10A   |
+|          4 | David   |   16 | 10B   |
+|          5 | Eva     |   15 | 10A   |
+|          6 | Frank   |   16 | 10B   |
+|          7 | Grace   |   15 | 10A   |
+|          8 | Hannah  |   16 | 10B   |
+|          9 | Ian     |   15 | 10A   |
+|         10 | Jack    |   16 | 10B   |
++------------+---------+------+-------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM marks;
++---------+------------+---------+-------+
+| mark_id | student_id | subject | score |
++---------+------------+---------+-------+
+|       1 |          1 | Math    |    85 |
+|       2 |          2 | Math    |    78 |
+|       3 |          3 | Math    |    92 |
+|       4 |          4 | Math    |    88 |
+|       5 |          5 | Math    |    74 |
+|       6 |          6 | Math    |    90 |
+|       7 |          7 | Math    |    80 |
+|       8 |          8 | Math    |    86 |
+|       9 |          9 | Math    |    89 |
+|      10 |         10 | Math    |    91 |
++---------+------------+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT s.student_id, s.name, s.class, m.subject, m.score FROM student s JOIN marks m ON s.student_id = m.student_id;
++------------+---------+-------+---------+-------+
+| student_id | name    | class | subject | score |
++------------+---------+-------+---------+-------+
+|          1 | Alice   | 10A   | Math    |    85 |
+|          2 | Bob     | 10B   | Math    |    78 |
+|          3 | Charlie | 10A   | Math    |    92 |
+|          4 | David   | 10B   | Math    |    88 |
+|          5 | Eva     | 10A   | Math    |    74 |
+|          6 | Frank   | 10B   | Math    |    90 |
+|          7 | Grace   | 10A   | Math    |    80 |
+|          8 | Hannah  | 10B   | Math    |    86 |
+|          9 | Ian     | 10A   | Math    |    89 |
+|         10 | Jack    | 10B   | Math    |    91 |
++------------+---------+-------+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> DELETE FROM marks WHERE student_id IN (2,3,5,7);
+Query OK, 4 rows affected (0.01 sec)
+
+mysql> SELECT s.student_id, s.name, s.class, m.subject, m.score FROM student s JOIN marks m ON s.student_id = m.student_id;
++------------+--------+-------+---------+-------+
+| student_id | name   | class | subject | score |
++------------+--------+-------+---------+-------+
+|          1 | Alice  | 10A   | Math    |    85 |
+|          4 | David  | 10B   | Math    |    88 |
+|          6 | Frank  | 10B   | Math    |    90 |
+|          8 | Hannah | 10B   | Math    |    86 |
+|          9 | Ian    | 10A   | Math    |    89 |
+|         10 | Jack   | 10B   | Math    |    91 |
++------------+--------+-------+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> DELETE FROM student WHERE student_id IN (2,3,5,7);
+Query OK, 4 rows affected (0.01 sec)
+
+mysql> SELECT s.student_id, s.name, s.class, m.subject, m.score FROM student s JOIN marks m ON s.student_id = m.student_id;
++------------+--------+-------+---------+-------+
+| student_id | name   | class | subject | score |
++------------+--------+-------+---------+-------+
+|          1 | Alice  | 10A   | Math    |    85 |
+|          4 | David  | 10B   | Math    |    88 |
+|          6 | Frank  | 10B   | Math    |    90 |
+|          8 | Hannah | 10B   | Math    |    86 |
+|          9 | Ian    | 10A   | Math    |    89 |
+|         10 | Jack   | 10B   | Math    |    91 |
++------------+--------+-------+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM marks;
++---------+------------+---------+-------+
+| mark_id | student_id | subject | score |
++---------+------------+---------+-------+
+|       1 |          1 | Math    |    85 |
+|       4 |          4 | Math    |    88 |
+|       6 |          6 | Math    |    90 |
+|       8 |          8 | Math    |    86 |
+|       9 |          9 | Math    |    89 |
+|      10 |         10 | Math    |    91 |
++---------+------------+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM student;
++------------+--------+------+-------+
+| student_id | name   | age  | class |
++------------+--------+------+-------+
+|          1 | Alice  |   15 | 10A   |
+|          4 | David  |   16 | 10B   |
+|          6 | Frank  |   16 | 10B   |
+|          8 | Hannah |   16 | 10B   |
+|          9 | Ian    |   15 | 10A   |
+|         10 | Jack   |   16 | 10B   |
++------------+--------+------+-------+
+6 rows in set (0.00 sec)
+
